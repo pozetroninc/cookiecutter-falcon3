@@ -1,0 +1,22 @@
+FROM python:3
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+RUN ["apt-get", "update"]
+RUN ["apt-get", "install", "-y", "python3-dev", "libev-dev"]
+
+RUN ["pip", "install", "wheel", "falcon==3.0.1", "bjoern==3.1.0", "uvicorn[standard]==0.15.0"]
+ADD ./requirements/requirements.txt /usr/src/app/requirements/requirements.txt
+RUN ["python", "-m", "pip", "install", "-r", "requirements/requirements.txt"]
+
+ADD . /usr/src/app
+RUN ["python", "setup.py", "develop"]
+
+RUN mkdir -p docker/api/
+
+EXPOSE 8000
+
+# The CMD can be adjusted to either run the WSGI or ASGI app
+CMD ["./docker/falcon-uvicorn-entrypoint.sh", "start"]
+# CMD ["./docker/falcon-bjoern-entrypoint.sh", "start"]

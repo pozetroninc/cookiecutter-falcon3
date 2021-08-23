@@ -1,0 +1,4 @@
+wheel
+falcon==3.0.1
+bjoern==3.1.0
+uvicorn[standard]==0.15.0
